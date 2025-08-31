@@ -1,3 +1,5 @@
+import { registerExtension } from './ConvizrExtensionRegistry.js';
+
 export const ContactFormExtension = {
     name: 'ContactForm',
     type: 'response',
@@ -341,3 +343,116 @@ export const ContactFormExtension = {
         element.appendChild(formContainer);
     },
 };
+
+// ============================================================================
+// INTEGRATION GUIDE FOR VOICEFLOW RUNTIME API
+// ============================================================================
+
+/*
+HOW TO INTEGRATE WITH VOICEFLOW RUNTIME API:
+
+1. SETUP IN YOUR MAIN APPLICATION:
+
+```javascript
+import { 
+    extensionRegistry, 
+    registerExtension, 
+    ContactFormExtension,
+    renderTraceWithExtensions 
+} from './ConvizrExtensions_V0.1.js';
+
+// Initialize the extension system
+function initializeExtensions(voiceflowClient) {
+    // Set the Voiceflow client
+    extensionRegistry.setVoiceflowClient(voiceflowClient);
+    
+    // Register your extensions
+    registerExtension(ContactFormExtension);
+    
+    // You can register more extensions here
+    // registerExtension(AnotherExtension);
+}
+```
+
+2. MODIFY YOUR TRACE RENDERING LOGIC:
+
+```javascript
+async function renderTraces(traces, container) {
+    for (const trace of traces) {
+        // Check if this trace should be handled by an extension
+        const extensionHandled = await renderTraceWithExtensions(trace, container);
+        
+        if (!extensionHandled) {
+            // Handle with your default trace rendering logic
+            renderDefaultTrace(trace, container);
+        }
+    }
+}
+```
+
+3. VOICEFLOW SETUP:
+
+In your Voiceflow project, create a custom extension with:
+- Type: ext_contact_form
+- Payload: {
+    "bt_submit": "Submit",
+    "lb_fullName": "Full Name", 
+    "lb_email": "Email"
+}
+
+4. COMPLETE INTEGRATION EXAMPLE:
+
+```javascript
+// Initialize Voiceflow
+const voiceflowClient = new Voiceflow({
+    versionID: 'your-version-id',
+    apiKey: 'your-api-key'
+});
+
+// Initialize extensions
+initializeExtensions(voiceflowClient);
+
+// Handle traces
+voiceflowClient.onMessage((message) => {
+    const traces = message.traces;
+    
+    traces.forEach(async (trace) => {
+        const container = document.getElementById('chat-container');
+        
+        if (trace.type === 'ext_contact_form') {
+            // Let the extension handle it
+            await renderTraceWithExtensions(trace, container);
+        } else {
+            // Handle other trace types normally
+            handleRegularTrace(trace, container);
+        }
+    });
+});
+```
+
+5. EXTENSION LIFECYCLE:
+
+The extension system provides:
+- Automatic extension discovery and registration
+- Error handling and fallbacks
+- Clean separation of concerns
+- Easy testing and debugging
+
+6. DEBUGGING:
+
+Check the console for:
+- "Registered extension: ContactForm"
+- "Rendering extension: ContactForm" 
+- "Submitting Contact Form: {payload}"
+
+7. CUSTOMIZATION:
+
+You can easily add more extensions by:
+1. Creating a new extension object with the same structure
+2. Registering it with registerExtension()
+3. The system will automatically handle matching and rendering
+
+*/
+
+// Auto-register the ContactFormExtension when this module is imported
+registerExtension(ContactFormExtension);
