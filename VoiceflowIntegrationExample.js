@@ -5,8 +5,8 @@ import {
     extensionRegistry, 
     registerExtension, 
     renderTraceWithExtensions 
-} from './ConvizrExtensionRegistry.js';
-import { ContactFormExtension } from './ConvizrExtensions_V0.1.js';
+} from 'https://convizr.github.io/Convizr/ConvizrExtensionRegistry.js';
+import { ContactFormExtension } from 'https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js';
 
 // ============================================================================
 // PHASE 1: EXTENSION FRAMEWORK SETUP
@@ -278,8 +278,8 @@ TO USE THIS INTEGRATION:
    - Replace 'your-api-key' with your actual Voiceflow API key
 
 4. Files Required:
-   - ConvizrExtensionRegistry.js
-   - ConvizrExtensions_V0.1.js
+   - https://convizr.github.io/Convizr/ConvizrExtensionRegistry.js
+   - https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js
    - VoiceflowIntegrationExample.js (this file)
 
 5. Testing:

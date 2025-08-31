@@ -1,4 +1,4 @@
-import { registerExtension } from './ConvizrExtensionRegistry.js';
+import { registerExtension } from 'https://convizr.github.io/Convizr/ConvizrExtensionRegistry.js';
 
 export const ContactFormExtension = {
     name: 'ContactForm',
@@ -359,7 +359,7 @@ import {
     registerExtension, 
     ContactFormExtension,
     renderTraceWithExtensions 
-} from './ConvizrExtensions_V0.1.js';
+} from 'https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js';
 
 // Initialize the extension system
 function initializeExtensions(voiceflowClient) {
