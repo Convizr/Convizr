@@ -1,12 +1,12 @@
 import { registerExtension } from 'https://convizr.github.io/Convizr/ConvizrExtensionRegistry.js';
 
-export const ContactFormExtension = {
-    name: 'ContactForm',
+export const OnboardingFormExtension = {
+    name: 'OnboardingForm',
     type: 'response',
     match: ({ trace }) =>
-        trace.type === 'ext_contact_form' || (trace.payload && trace.payload.name === 'ext_contact_form'),
+        trace.type === 'ext_onboarding_form' || (trace.payload && trace.payload.name === 'ext_onboarding_form'),
     render: ({ trace, element }) => {
-        console.log('Rendering ContactFormExtension');
+        console.log('Rendering OnboardingFormExtension');
 
         // Parse payload
         let payloadObj;
@@ -22,7 +22,7 @@ export const ContactFormExtension = {
         }
 
         // Extract dynamic labels from payload
-        const { bt_submit = 'Submit', lb_fullName = 'Full Name', lb_email = 'Email' } = payloadObj;
+        const { bt_submit = 'Submit', lb_fullName = 'Full Name', lb_email = 'Email', lb_companyName = 'Company Name' } = payloadObj;
 
         // Create form container
         const formContainer = document.createElement('form');
@@ -204,8 +204,8 @@ export const ContactFormExtension = {
 
             <div class="convizr-form">
                 <div class="form-header">
-                    <h2 class="form-title">Get in Touch</h2>
-                    <p class="form-subtitle">Ready to transform your business with AI? Let's start the conversation.</p>
+                    <h2 class="form-title">Welcome to Convizr</h2>
+                    <p class="form-subtitle">Let's get started with your AI transformation journey. Tell us about yourself and your business.</p>
                 </div>
 
                 <div class="form-group">
@@ -234,6 +234,19 @@ export const ContactFormExtension = {
                     <div class="error-message" id="emailError"></div>
                 </div>
 
+                <div class="form-group">
+                    <label for="companyName" class="form-label">${lb_companyName}</label>
+                    <input 
+                        type="text" 
+                        id="companyName" 
+                        name="companyName" 
+                        class="form-input" 
+                        placeholder="Enter your company name" 
+                        required
+                    >
+                    <div class="error-message" id="companyError"></div>
+                </div>
+
                 <button type="submit" class="submit-btn" id="submitBtn">
                     <span class="btn-text">${bt_submit}</span>
                     <div class="loading" id="loading"></div>
@@ -253,15 +266,18 @@ export const ContactFormExtension = {
             const successMessage = formContainer.querySelector('#successMessage');
             const nameError = formContainer.querySelector('#nameError');
             const emailError = formContainer.querySelector('#emailError');
+            const companyError = formContainer.querySelector('#companyError');
 
             // Reset error messages
             nameError.style.display = 'none';
             emailError.style.display = 'none';
+            companyError.style.display = 'none';
             successMessage.style.display = 'none';
 
             // Get form values
             const fullName = formContainer.querySelector('#fullName').value.trim();
             const email = formContainer.querySelector('#email').value.trim();
+            const companyName = formContainer.querySelector('#companyName').value.trim();
 
             // Basic validation
             let hasErrors = false;
@@ -282,6 +298,12 @@ export const ContactFormExtension = {
                 hasErrors = true;
             }
 
+            if (!companyName) {
+                companyError.textContent = 'Please enter your company name';
+                companyError.style.display = 'block';
+                hasErrors = true;
+            }
+
             if (hasErrors) {
                 return;
             }
@@ -295,11 +317,12 @@ export const ContactFormExtension = {
             const payload = {
                 fullName: fullName,
                 email: email,
+                companyName: companyName,
                 timestamp: new Date().toISOString(),
-                source: 'contact_form'
+                source: 'onboarding_form'
             };
 
-            console.log('Submitting Contact Form:', payload);
+            console.log('Submitting Onboarding Form:', payload);
 
             // Simulate API call delay for better UX
             setTimeout(() => {
@@ -316,6 +339,7 @@ export const ContactFormExtension = {
                 // Reset form
                 formContainer.querySelector('#fullName').value = '';
                 formContainer.querySelector('#email').value = '';
+                formContainer.querySelector('#companyName').value = '';
 
                 // Re-enable button after a delay
                 setTimeout(() => {
@@ -393,11 +417,12 @@ async function renderTraces(traces, container) {
 3. VOICEFLOW SETUP:
 
 In your Voiceflow project, create a custom extension with:
-- Type: ext_contact_form
+- Type: ext_onboarding_form
 - Payload: {
     "bt_submit": "Submit",
     "lb_fullName": "Full Name", 
-    "lb_email": "Email"
+    "lb_email": "Email",
+    "lb_companyName": "Company Name"
 }
 
 4. COMPLETE INTEGRATION EXAMPLE:
@@ -419,7 +444,7 @@ voiceflowClient.onMessage((message) => {
     traces.forEach(async (trace) => {
         const container = document.getElementById('chat-container');
         
-        if (trace.type === 'ext_contact_form') {
+        if (trace.type === 'ext_onboarding_form') {
             // Let the extension handle it
             await renderTraceWithExtensions(trace, container);
         } else {
@@ -441,9 +466,9 @@ The extension system provides:
 6. DEBUGGING:
 
 Check the console for:
-- "Registered extension: ContactForm"
-- "Rendering extension: ContactForm" 
-- "Submitting Contact Form: {payload}"
+- "Registered extension: OnboardingForm"
+- "Rendering extension: OnboardingForm" 
+- "Submitting Onboarding Form: {payload}"
 
 7. CUSTOMIZATION:
 
@@ -454,5 +479,5 @@ You can easily add more extensions by:
 
 */
 
-// Auto-register the ContactFormExtension when this module is imported
-registerExtension(ContactFormExtension);
+// Auto-register the OnboardingFormExtension when this module is imported
+registerExtension(OnboardingFormExtension);

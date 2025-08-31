@@ -96,12 +96,12 @@ import {
     registerExtension, 
     renderTraceWithExtensions 
 } from 'https://convizr.github.io/Convizr/ConvizrExtensionRegistry.js';
-import { ContactFormExtension } from 'https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js';
+import { OnboardingFormExtension } from 'https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js';
 
 // Initialize extensions
 function initializeExtensions(voiceflowClient) {
     extensionRegistry.setVoiceflowClient(voiceflowClient);
-    registerExtension(ContactFormExtension);
+    registerExtension(OnboardingFormExtension);
 }
 
 // Handle traces with extensions
@@ -139,12 +139,13 @@ voiceflowClient.start();
         <h2>Voiceflow Setup</h2>
         <p>In your Voiceflow project, create a custom extension with:</p>
         <ul>
-            <li><strong>Type:</strong> <code>ext_contact_form</code></li>
+            <li><strong>Type:</strong> <code>ext_onboarding_form</code></li>
             <li><strong>Payload:</strong> 
                 <pre>{
   "bt_submit": "Submit",
   "lb_fullName": "Full Name", 
-  "lb_email": "Email"
+  "lb_email": "Email",
+  "lb_companyName": "Company Name"
 }</pre>
             </li>
         </ul>
@@ -152,7 +153,7 @@ voiceflowClient.start();
         <h2>Available Files</h2>
         <ul>
             <li><a href="https://convizr.github.io/Convizr/ConvizrExtensionRegistry.js" target="_blank">ConvizrExtensionRegistry.js</a> - Core extension system</li>
-            <li><a href="https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js" target="_blank">ConvizrExtensions_V0.1.js</a> - Contact form extension</li>
+            <li><a href="https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js" target="_blank">ConvizrExtensions_V0.1.js</a> - Onboarding form extension</li>
             <li><a href="https://convizr.github.io/Convizr/VoiceflowIntegrationExample.js" target="_blank">VoiceflowIntegrationExample.js</a> - Complete integration example</li>
         </ul>
         
@@ -175,12 +176,12 @@ voiceflowClient.start();
             registerExtension, 
             renderTraceWithExtensions 
         } from 'https://convizr.github.io/Convizr/ConvizrExtensionRegistry.js';
-        import { ContactFormExtension } from 'https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js';
+        import { OnboardingFormExtension } from 'https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js';
         
         // Initialize extensions
         function initializeExtensions(voiceflowClient) {
             extensionRegistry.setVoiceflowClient(voiceflowClient);
-            registerExtension(ContactFormExtension);
+            registerExtension(OnboardingFormExtension);
         }
         
         // Handle traces with extensions

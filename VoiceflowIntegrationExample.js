@@ -6,7 +6,7 @@ import {
     registerExtension, 
     renderTraceWithExtensions 
 } from 'https://convizr.github.io/Convizr/ConvizrExtensionRegistry.js';
-import { ContactFormExtension } from 'https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js';
+import { OnboardingFormExtension } from 'https://convizr.github.io/Convizr/ConvizrExtensions_V0.1.js';
 
 // ============================================================================
 // PHASE 1: EXTENSION FRAMEWORK SETUP
@@ -20,7 +20,7 @@ function initializeExtensions(voiceflowClient) {
     extensionRegistry.setVoiceflowClient(voiceflowClient);
     
     // Register your extensions
-    registerExtension(ContactFormExtension);
+    registerExtension(OnboardingFormExtension);
     
     // You can register more extensions here
     // registerExtension(AnotherExtension);
@@ -265,12 +265,13 @@ TO USE THIS INTEGRATION:
 
 2. Voiceflow Setup:
    - Create a custom extension in your Voiceflow project
-   - Set the type to: ext_contact_form
+   - Set the type to: ext_onboarding_form
    - Set the payload to:
      {
        "bt_submit": "Submit",
        "lb_fullName": "Full Name",
-       "lb_email": "Email"
+       "lb_email": "Email",
+       "lb_companyName": "Company Name"
      }
 
 3. Configuration:
@@ -288,8 +289,8 @@ TO USE THIS INTEGRATION:
    - Verify data is sent back to Voiceflow correctly
 
 The extension will automatically:
-- Match traces with type 'ext_contact_form'
-- Render the beautiful Convizr-styled contact form
+- Match traces with type 'ext_onboarding_form'
+- Render the beautiful Convizr-styled onboarding form
 - Handle form submission and validation
 - Send data back to Voiceflow with the correct payload structure
 */
