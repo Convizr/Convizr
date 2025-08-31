@@ -271,7 +271,10 @@ TO USE THIS INTEGRATION:
        "bt_submit": "Submit",
        "lb_fullName": "Full Name",
        "lb_email": "Email",
-       "lb_companyName": "Company Name"
+       "lb_companyName": "Company Name",
+       "lb_preferredDays": "Preferred Days",
+       "lb_preferredTime": "Preferred Time",
+       "lb_timezone": "Your Timezone"
      }
 
 3. Configuration:

@@ -22,7 +22,15 @@ export const OnboardingFormExtension = {
         }
 
         // Extract dynamic labels from payload
-        const { bt_submit = 'Submit', lb_fullName = 'Full Name', lb_email = 'Email', lb_companyName = 'Company Name' } = payloadObj;
+        const { 
+            bt_submit = 'Submit', 
+            lb_fullName = 'Full Name', 
+            lb_email = 'Email', 
+            lb_companyName = 'Company Name',
+            lb_preferredDays = 'Preferred Days',
+            lb_preferredTime = 'Preferred Time',
+            lb_timezone = 'Your Timezone'
+        } = payloadObj;
 
         // Create form container
         const formContainer = document.createElement('form');
@@ -200,12 +208,134 @@ export const OnboardingFormExtension = {
                     margin-top: 0.5rem;
                     display: none;
                 }
+                
+                .timezone-display {
+                    background: #f8f9fa;
+                    padding: 1rem;
+                    border-radius: 8px;
+                    border: 2px solid #e5e5e5;
+                    margin-bottom: 1rem;
+                }
+                
+                .timezone-info {
+                    font-weight: 500;
+                    color: #1a1a1a;
+                }
+                
+                .days-selection {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                    gap: 0.5rem;
+                    margin-bottom: 1rem;
+                }
+                
+                .day-checkbox {
+                    display: flex;
+                    align-items: center;
+                    padding: 0.75rem;
+                    background: #ffffff;
+                    border: 2px solid #e5e5e5;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+                
+                .day-checkbox:hover {
+                    border-color: #FF6B35;
+                    background: #fff5f2;
+                }
+                
+                .day-checkbox input[type="checkbox"] {
+                    margin-right: 0.5rem;
+                    width: auto;
+                    padding: 0;
+                }
+                
+                .day-checkbox input[type="checkbox"]:checked + .day-label {
+                    color: #FF6B35;
+                    font-weight: 600;
+                }
+                
+                .day-checkbox:has(input[type="checkbox"]:checked) {
+                    border-color: #FF6B35;
+                    background: #fff5f2;
+                }
+                
+                .day-label {
+                    font-size: 0.9rem;
+                    color: #1a1a1a;
+                    transition: color 0.2s ease;
+                }
+                
+                .time-selection {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.75rem;
+                    margin-bottom: 1rem;
+                }
+                
+                .time-slot {
+                    background: #ffffff;
+                    border: 2px solid #e5e5e5;
+                    border-radius: 8px;
+                    transition: all 0.2s ease;
+                }
+                
+                .time-slot:hover {
+                    border-color: #FF6B35;
+                    background: #fff5f2;
+                }
+                
+                .time-checkbox {
+                    display: flex;
+                    align-items: center;
+                    padding: 1rem;
+                    cursor: pointer;
+                    width: 100%;
+                }
+                
+                .time-checkbox input[type="checkbox"] {
+                    margin-right: 0.75rem;
+                    width: auto;
+                    padding: 0;
+                }
+                
+                .time-label {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.25rem;
+                }
+                
+                .time-label strong {
+                    color: #1a1a1a;
+                    font-size: 0.95rem;
+                }
+                
+                .time-range {
+                    color: #666;
+                    font-size: 0.85rem;
+                }
+                
+                .local-time {
+                    color: #FF6B35;
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                }
+                
+                .time-checkbox input[type="checkbox"]:checked + .time-label strong {
+                    color: #FF6B35;
+                }
+                
+                .time-slot:has(input[type="checkbox"]:checked) {
+                    border-color: #FF6B35;
+                    background: #fff5f2;
+                }
             </style>
 
             <div class="convizr-form">
                 <div class="form-header">
                     <h2 class="form-title">Welcome to Convizr</h2>
-                    <p class="form-subtitle">Let's get started with your AI transformation journey. Tell us about yourself and your business.</p>
+                    <p class="form-subtitle">Let's get started with your AI transformation journey. Tell us about yourself and schedule a consultation.</p>
                 </div>
 
                 <div class="form-group">
@@ -247,6 +377,85 @@ export const OnboardingFormExtension = {
                     <div class="error-message" id="companyError"></div>
                 </div>
 
+                <div class="form-group">
+                    <label class="form-label">${lb_timezone}</label>
+                    <div class="timezone-display" id="timezoneDisplay">
+                        <span class="timezone-info">Detecting your timezone...</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">${lb_preferredDays}</label>
+                    <div class="days-selection">
+                        <label class="day-checkbox">
+                            <input type="checkbox" name="preferredDays" value="monday">
+                            <span class="day-label">Monday</span>
+                        </label>
+                        <label class="day-checkbox">
+                            <input type="checkbox" name="preferredDays" value="tuesday">
+                            <span class="day-label">Tuesday</span>
+                        </label>
+                        <label class="day-checkbox">
+                            <input type="checkbox" name="preferredDays" value="wednesday">
+                            <span class="day-label">Wednesday</span>
+                        </label>
+                        <label class="day-checkbox">
+                            <input type="checkbox" name="preferredDays" value="thursday">
+                            <span class="day-label">Thursday</span>
+                        </label>
+                        <label class="day-checkbox">
+                            <input type="checkbox" name="preferredDays" value="friday">
+                            <span class="day-label">Friday</span>
+                        </label>
+                        <label class="day-checkbox">
+                            <input type="checkbox" name="preferredDays" value="saturday">
+                            <span class="day-label">Saturday</span>
+                        </label>
+                        <label class="day-checkbox">
+                            <input type="checkbox" name="preferredDays" value="sunday">
+                            <span class="day-label">Sunday</span>
+                        </label>
+                    </div>
+                    <div class="error-message" id="daysError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">${lb_preferredTime}</label>
+                    <div class="time-selection" id="timeSelection">
+                        <div class="time-slot">
+                            <label class="time-checkbox">
+                                <input type="checkbox" name="preferredTimes" value="morning">
+                                <span class="time-label">
+                                    <strong>Morning</strong>
+                                    <span class="time-range">9:00 AM - 12:00 PM CET</span>
+                                    <span class="local-time" id="morningLocal"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="time-slot">
+                            <label class="time-checkbox">
+                                <input type="checkbox" name="preferredTimes" value="midday">
+                                <span class="time-label">
+                                    <strong>Midday</strong>
+                                    <span class="time-range">12:00 PM - 3:00 PM CET</span>
+                                    <span class="local-time" id="middayLocal"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="time-slot">
+                            <label class="time-checkbox">
+                                <input type="checkbox" name="preferredTimes" value="evening">
+                                <span class="time-label">
+                                    <strong>Evening</strong>
+                                    <span class="time-range">3:00 PM - 6:00 PM CET</span>
+                                    <span class="local-time" id="eveningLocal"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="error-message" id="timeError"></div>
+                </div>
+
                 <button type="submit" class="submit-btn" id="submitBtn">
                     <span class="btn-text">${bt_submit}</span>
                     <div class="loading" id="loading"></div>
@@ -267,17 +476,32 @@ export const OnboardingFormExtension = {
             const nameError = formContainer.querySelector('#nameError');
             const emailError = formContainer.querySelector('#emailError');
             const companyError = formContainer.querySelector('#companyError');
+            const daysError = formContainer.querySelector('#daysError');
+            const timeError = formContainer.querySelector('#timeError');
 
             // Reset error messages
             nameError.style.display = 'none';
             emailError.style.display = 'none';
             companyError.style.display = 'none';
+            daysError.style.display = 'none';
+            timeError.style.display = 'none';
             successMessage.style.display = 'none';
 
             // Get form values
             const fullName = formContainer.querySelector('#fullName').value.trim();
             const email = formContainer.querySelector('#email').value.trim();
             const companyName = formContainer.querySelector('#companyName').value.trim();
+            
+            // Get selected days
+            const selectedDays = Array.from(formContainer.querySelectorAll('input[name="preferredDays"]:checked'))
+                .map(checkbox => checkbox.value);
+            
+            // Get selected times
+            const selectedTimes = Array.from(formContainer.querySelectorAll('input[name="preferredTimes"]:checked'))
+                .map(checkbox => checkbox.value);
+            
+            // Get user timezone
+            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Berlin';
 
             // Basic validation
             let hasErrors = false;
@@ -304,6 +528,18 @@ export const OnboardingFormExtension = {
                 hasErrors = true;
             }
 
+            if (selectedDays.length === 0) {
+                daysError.textContent = 'Please select at least one preferred day';
+                daysError.style.display = 'block';
+                hasErrors = true;
+            }
+
+            if (selectedTimes.length === 0) {
+                timeError.textContent = 'Please select at least one preferred time';
+                timeError.style.display = 'block';
+                hasErrors = true;
+            }
+
             if (hasErrors) {
                 return;
             }
@@ -318,6 +554,9 @@ export const OnboardingFormExtension = {
                 fullName: fullName,
                 email: email,
                 companyName: companyName,
+                preferredDays: selectedDays,
+                preferredTimes: selectedTimes,
+                userTimezone: userTimezone,
                 timestamp: new Date().toISOString(),
                 source: 'onboarding_form'
             };
@@ -340,6 +579,11 @@ export const OnboardingFormExtension = {
                 formContainer.querySelector('#fullName').value = '';
                 formContainer.querySelector('#email').value = '';
                 formContainer.querySelector('#companyName').value = '';
+                
+                // Reset checkboxes
+                formContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
 
                 // Re-enable button after a delay
                 setTimeout(() => {
@@ -362,6 +606,79 @@ export const OnboardingFormExtension = {
                 input.parentElement.querySelector('.form-label').style.color = '#1a1a1a';
             });
         });
+
+        // Timezone detection and time conversion
+        function detectTimezone() {
+            try {
+                const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const timezoneDisplay = formContainer.querySelector('#timezoneDisplay');
+                timezoneDisplay.innerHTML = `
+                    <span class="timezone-info">
+                        <strong>Your timezone:</strong> ${userTimezone}
+                        <br><small>Times shown in your local time</small>
+                    </span>
+                `;
+                
+                // Convert CET times to user's timezone
+                convertTimesToLocal(userTimezone);
+                
+                return userTimezone;
+            } catch (error) {
+                console.error('Error detecting timezone:', error);
+                const timezoneDisplay = formContainer.querySelector('#timezoneDisplay');
+                timezoneDisplay.innerHTML = `
+                    <span class="timezone-info">
+                        <strong>Timezone:</strong> Unable to detect automatically
+                        <br><small>Times shown in CET (Central European Time)</small>
+                    </span>
+                `;
+                return 'Europe/Berlin'; // Default to CET
+            }
+        }
+
+        function convertTimesToLocal(userTimezone) {
+            const timeSlots = [
+                { id: 'morningLocal', cetStart: '09:00', cetEnd: '12:00', label: 'Morning' },
+                { id: 'middayLocal', cetStart: '12:00', cetEnd: '15:00', label: 'Midday' },
+                { id: 'eveningLocal', cetStart: '15:00', cetEnd: '18:00', label: 'Evening' }
+            ];
+
+            timeSlots.forEach(slot => {
+                try {
+                    // Create dates for today in CET
+                    const today = new Date();
+                    const cetStartTime = new Date(today.toLocaleDateString() + ' ' + slot.cetStart + ':00');
+                    const cetEndTime = new Date(today.toLocaleDateString() + ' ' + slot.cetEnd + ':00');
+                    
+                    // Convert to user's timezone
+                    const userStartTime = new Date(cetStartTime.toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
+                    const userEndTime = new Date(cetEndTime.toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
+                    
+                    const localStart = userStartTime.toLocaleTimeString('en-US', { 
+                        timeZone: userTimezone,
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+                    const localEnd = userEndTime.toLocaleTimeString('en-US', { 
+                        timeZone: userTimezone,
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+                    
+                    const localTimeElement = formContainer.querySelector(`#${slot.id}`);
+                    if (localTimeElement) {
+                        localTimeElement.textContent = `(${localStart} - ${localEnd} your time)`;
+                    }
+                } catch (error) {
+                    console.error(`Error converting ${slot.label} time:`, error);
+                }
+            });
+        }
+
+        // Initialize timezone detection
+        detectTimezone();
 
         // Append form to the element
         element.appendChild(formContainer);
@@ -422,7 +739,10 @@ In your Voiceflow project, create a custom extension with:
     "bt_submit": "Submit",
     "lb_fullName": "Full Name", 
     "lb_email": "Email",
-    "lb_companyName": "Company Name"
+    "lb_companyName": "Company Name",
+    "lb_preferredDays": "Preferred Days",
+    "lb_preferredTime": "Preferred Time",
+    "lb_timezone": "Your Timezone"
 }
 
 4. COMPLETE INTEGRATION EXAMPLE:
