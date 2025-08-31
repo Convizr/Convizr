@@ -19,85 +19,321 @@ export const ContactFormExtension = {
             payloadObj = trace.payload || {};
         }
 
-        const { header = 'Contact' } = payloadObj;
+        // Extract dynamic labels from payload
+        const { bt_submit = 'Submit', lb_fullName = 'Full Name', lb_email = 'Email' } = payloadObj;
 
         // Create form container
         const formContainer = document.createElement('form');
 
         formContainer.innerHTML = `
             <style>
-                label {
-                    display: block;
-                    margin: 10px 0 5px;
-                    font-size: 14px;
-                    font-weight: bold;
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                
+                .convizr-form {
+                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    max-width: 500px;
+                    margin: 0 auto;
+                    padding: 2rem;
+                    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+                    border-radius: 16px;
+                    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.1);
+                    border: 1px solid rgba(255, 107, 53, 0.1);
+                    transition: all 0.3s ease;
                 }
-                input, textarea {
+                
+                .convizr-form:hover {
+                    box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15);
+                    transform: translateY(-2px);
+                }
+                
+                .form-header {
+                    text-align: center;
+                    margin-bottom: 2rem;
+                }
+                
+                .form-title {
+                    font-size: 1.75rem;
+                    font-weight: 700;
+                    color: #1a1a1a;
+                    margin-bottom: 0.5rem;
+                    background: linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+                
+                .form-subtitle {
+                    font-size: 0.95rem;
+                    color: #666;
+                    font-weight: 400;
+                }
+                
+                .form-group {
+                    margin-bottom: 1.5rem;
+                    position: relative;
+                }
+                
+                .form-label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    color: #1a1a1a;
+                    transition: color 0.2s ease;
+                }
+                
+                .form-input {
                     width: 100%;
-                    padding: 8px;
-                    margin: 5px 0 20px 0;
-                    display: inline-block;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
+                    padding: 0.875rem 1rem;
+                    font-size: 0.95rem;
+                    font-family: inherit;
+                    border: 2px solid #e5e5e5;
+                    border-radius: 12px;
+                    background: #ffffff;
+                    color: #1a1a1a;
+                    transition: all 0.3s ease;
                     box-sizing: border-box;
                 }
-                textarea {
-                    height: 100px;
-                    resize: vertical;
+                
+                .form-input:focus {
+                    outline: none;
+                    border-color: #FF6B35;
+                    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+                    transform: translateY(-1px);
                 }
-                input[type="submit"] {
-                    background-color: #447f76;
-                    color: white;
+                
+                .form-input::placeholder {
+                    color: #999;
+                    font-weight: 400;
+                }
+                
+                .form-input:hover {
+                    border-color: #FF6B35;
+                    transform: translateY(-1px);
+                }
+                
+                .submit-btn {
+                    width: 100%;
+                    padding: 1rem 2rem;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    font-family: inherit;
+                    color: #ffffff;
+                    background: linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%);
                     border: none;
-                    padding: 10px;
-                    font-size: 16px;
-                    text-align: center;
+                    border-radius: 12px;
                     cursor: pointer;
-                    border-radius: 4px;
-                    transition: all 0.2s ease;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                    margin-top: 1rem;
                 }
-                input[type="submit"]:hover {
-                    background-color: #376b62;
+                
+                .submit-btn::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                    transition: left 0.5s ease;
+                }
+                
+                .submit-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+                }
+                
+                .submit-btn:hover::before {
+                    left: 100%;
+                }
+                
+                .submit-btn:active {
+                    transform: translateY(0);
+                    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+                }
+                
+                .submit-btn:disabled {
+                    background: #e5e5e5;
+                    color: #999;
+                    cursor: not-allowed;
+                    transform: none;
+                    box-shadow: none;
+                }
+                
+                .submit-btn:disabled::before {
+                    display: none;
+                }
+                
+                .loading {
+                    display: none;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 20px;
+                    height: 20px;
+                    border: 2px solid #ffffff;
+                    border-top: 2px solid transparent;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+                
+                @keyframes spin {
+                    0% { transform: translate(-50%, -50%) rotate(0deg); }
+                    100% { transform: translate(-50%, -50%) rotate(360deg); }
+                }
+                
+                .error-message {
+                    color: #dc3545;
+                    font-size: 0.85rem;
+                    margin-top: 0.5rem;
+                    display: none;
+                }
+                
+                .success-message {
+                    color: #28a745;
+                    font-size: 0.85rem;
+                    margin-top: 0.5rem;
+                    display: none;
                 }
             </style>
 
-            <fieldset>
-                <legend>${header}</legend>
+            <div class="convizr-form">
+                <div class="form-header">
+                    <h2 class="form-title">Get in Touch</h2>
+                    <p class="form-subtitle">Ready to transform your business with AI? Let's start the conversation.</p>
+                </div>
 
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                <div class="form-group">
+                    <label for="fullName" class="form-label">${lb_fullName}</label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        name="fullName" 
+                        class="form-input" 
+                        placeholder="Enter your full name" 
+                        required
+                    >
+                    <div class="error-message" id="nameError"></div>
+                </div>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <div class="form-group">
+                    <label for="email" class="form-label">${lb_email}</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="Enter your email address" 
+                        required
+                    >
+                    <div class="error-message" id="emailError"></div>
+                </div>
 
-                <label for="phone">Phone (Optional):</label>
-                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
-
-                <label for="question">Your Question:</label>
-                <textarea id="question" name="question" placeholder="Ask your question here..." required></textarea>
-
-                <input type="submit" value="Submit">
-            </fieldset>
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">${bt_submit}</span>
+                    <div class="loading" id="loading"></div>
+                </button>
+                
+                <div class="success-message" id="successMessage">Thank you! We'll get back to you soon.</div>
+            </div>
         `;
 
         // Handle form submission
         formContainer.addEventListener('submit', (event) => {
             event.preventDefault();
 
-            // Collect all input values into the payload
+            const submitBtn = formContainer.querySelector('#submitBtn');
+            const btnText = formContainer.querySelector('.btn-text');
+            const loading = formContainer.querySelector('#loading');
+            const successMessage = formContainer.querySelector('#successMessage');
+            const nameError = formContainer.querySelector('#nameError');
+            const emailError = formContainer.querySelector('#emailError');
+
+            // Reset error messages
+            nameError.style.display = 'none';
+            emailError.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            // Get form values
+            const fullName = formContainer.querySelector('#fullName').value.trim();
+            const email = formContainer.querySelector('#email').value.trim();
+
+            // Basic validation
+            let hasErrors = false;
+
+            if (!fullName) {
+                nameError.textContent = 'Please enter your full name';
+                nameError.style.display = 'block';
+                hasErrors = true;
+            }
+
+            if (!email) {
+                emailError.textContent = 'Please enter your email address';
+                emailError.style.display = 'block';
+                hasErrors = true;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                emailError.textContent = 'Please enter a valid email address';
+                emailError.style.display = 'block';
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            loading.style.display = 'block';
+
+            // Collect form data into payload
             const payload = {
-                name: formContainer.querySelector('#name').value.trim(),
-                email: formContainer.querySelector('#email').value.trim(),
-                phone: formContainer.querySelector('#phone').value.trim() || null,
-                question: formContainer.querySelector('#question').value.trim(),
+                fullName: fullName,
+                email: email,
+                timestamp: new Date().toISOString(),
+                source: 'contact_form'
             };
 
             console.log('Submitting Contact Form:', payload);
 
-            // Send the payload back to Voiceflow
-            window.voiceflow.chat.interact({
-                type: 'complete',
-                payload: payload,
+            // Simulate API call delay for better UX
+            setTimeout(() => {
+                // Send the payload back to Voiceflow
+                window.voiceflow.chat.interact({
+                    type: 'complete',
+                    payload: payload,
+                });
+
+                // Show success state
+                loading.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Reset form
+                formContainer.querySelector('#fullName').value = '';
+                formContainer.querySelector('#email').value = '';
+
+                // Re-enable button after a delay
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    btnText.style.display = 'block';
+                    successMessage.style.display = 'none';
+                }, 3000);
+
+            }, 1000);
+        });
+
+        // Add input focus effects
+        const inputs = formContainer.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('.form-label').style.color = '#FF6B35';
+            });
+            
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('.form-label').style.color = '#1a1a1a';
             });
         });
 
